@@ -3,12 +3,12 @@ const path = require('path');
 
 class UniqueIntProcessor {
     constructor() {
-        this.hasAppeared = new Array(2047).fill(false); // Boolean array for integers from -1023 to 1023
+        this.hasAppeared = new Array(2047).fill(false); 
         this.minimumInteger = -1023;
     }
 
     processFile(inputFilePath, outputFilePath) {
-        // Reset seen array for each file
+        
         this.hasAppeared = new Array(2047).fill(false);
         const uniqueNumbers = this.readUniqueNumbers(inputFilePath);
         this.writeUniqueNumbers(uniqueNumbers, outputFilePath);
@@ -24,13 +24,13 @@ class UniqueIntProcessor {
             if (strippedLine) {
                 if (this.isValidIntegerLine(strippedLine)) {
                     const number = parseInt(strippedLine, 10);
-                    if (number >= -1023 && number <= 1023) { // Ensure the number is within range
+                    if (number >= -1023 && number <= 1023) { 
                         if (!this.hasAppeared[number - this.minimumInteger]) {
                             this.hasAppeared[number - this.minimumInteger] = true;
                             uniqueNumbers.push(number);
                         }
                     } else {
-                        console.log(`Number out of range: ${number}`);
+                        console.log(`Number that's not in range: ${number}`);
                     }
                 }
             }
@@ -54,7 +54,7 @@ class UniqueIntProcessor {
             return numbers;
         }
 
-        // Implementing Bubble Sort for simplicity
+        
         const count = numbers.length;
         for (let firstIndex = 0; firstIndex < count; firstIndex++) {
             for (let secondIndex = 0; secondIndex < count - firstIndex - 1; secondIndex++) {
@@ -72,14 +72,14 @@ class UniqueIntProcessor {
     }
 }
 
-const inputFolder = './Inputs';
+const inputFolder = './Input';
 const outputFolder = './Output';
 
 const processor = new UniqueIntProcessor();
 
 fileSystem.readdir(inputFolder, (error, files) => {
     if (error) {
-        console.error(`Error reading input folder: ${error}`);
+        console.error(`Error: ${error}`);
         return;
     }
 
@@ -88,7 +88,7 @@ fileSystem.readdir(inputFolder, (error, files) => {
             const inputPath = path.join(inputFolder, fileName);
             const outputPath = path.join(outputFolder, `${fileName}_results.txt`);
 
-            // Timing for each file
+            
             const startTime = Date.now();
             processor.processFile(inputPath, outputPath);
             const endTime = Date.now();
