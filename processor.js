@@ -10,12 +10,12 @@ class UniqueIntProcessor {
     processFile(inputFilePath, outputFilePath) {
         
         this.hasAppeared = new Array(2047).fill(false);
-        const uniqueNumbers = this.readUniqueNumbers(inputFilePath);
-        this.writeUniqueNumbers(uniqueNumbers, outputFilePath);
+        const distinctNumbers = this.readUniqueNumbers(inputFilePath);
+        this.writeDistinctNumbers(distinctNumbers, outputFilePath);
     }
 
     readUniqueNumbers(inputFilePath) {
-        const uniqueNumbers = [];
+        const distinctNumbers = [];
         const data = fileSystem.readFileSync(inputFilePath, 'utf-8');
         const lines = data.split('\n');
         
@@ -27,7 +27,7 @@ class UniqueIntProcessor {
                     if (number >= -1023 && number <= 1023) { 
                         if (!this.hasAppeared[number - this.minimumInteger]) {
                             this.hasAppeared[number - this.minimumInteger] = true;
-                            uniqueNumbers.push(number);
+                            distinctNumbers.push(number);
                         }
                     } else {
                         console.log(`Number that's not in range: ${number}`);
@@ -36,7 +36,7 @@ class UniqueIntProcessor {
             }
         });
 
-        return this.sortUniqueNumbers(uniqueNumbers);
+        return this.sortDistinctNumbers(distinctNumbers);
     }
 
     isValidIntegerLine(line) {
@@ -49,7 +49,7 @@ class UniqueIntProcessor {
         }
     }
 
-    sortUniqueNumbers(numbers) {
+    sortDistinctNumbers(numbers) {
         if (numbers.length === 0) {
             return numbers;
         }
@@ -66,8 +66,8 @@ class UniqueIntProcessor {
         return numbers;
     }
 
-    writeUniqueNumbers(uniqueNumbers, outputFilePath) {
-        const data = uniqueNumbers.join('\n') + '\n';
+    writeDistinctNumbers(distinctNumbers, outputFilePath) {
+        const data = distinctNumbers.join('\n') + '\n';
         fileSystem.writeFileSync(outputFilePath, data, 'utf-8');
     }
 }
