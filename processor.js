@@ -1,22 +1,22 @@
-const fs = require('fs');
+const fileSystem = require('fs');
 const path = require('path');
 
-class UniqueInt {
+class UniqueIntProcessor {
     constructor() {
-        this.seen = new Array(2047).fill(false); // Boolean array for integers from -1023 to 1023
-        this.minInt = -1023;
+        this.hasAppeared = new Array(2047).fill(false); // Boolean array for integers from -1023 to 1023
+        this.minimumInteger = -1023;
     }
 
     processFile(inputFilePath, outputFilePath) {
         // Reset seen array for each file
-        this.seen = new Array(2047).fill(false);
-        const uniqueNumbers = this.readUniqueIntegers(inputFilePath);
-        this.writeUniqueIntegers(uniqueNumbers, outputFilePath);
+        this.hasAppeared = new Array(2047).fill(false);
+        const uniqueNumbers = this.readUniqueNumbers(inputFilePath);
+        this.writeUniqueNumbers(uniqueNumbers, outputFilePath);
     }
 
-    readUniqueIntegers(inputFilePath) {
+    readUniqueNumbers(inputFilePath) {
         const uniqueNumbers = [];
-        const data = fs.readFileSync(inputFilePath, 'utf-8');
+        const data = fileSystem.readFileSync(inputFilePath, 'utf-8');
         const lines = data.split('\n');
         
         lines.forEach(line => {
@@ -25,8 +25,8 @@ class UniqueInt {
                 if (this.isValidIntegerLine(strippedLine)) {
                     const number = parseInt(strippedLine, 10);
                     if (number >= -1023 && number <= 1023) { // Ensure the number is within range
-                        if (!this.seen[number - this.minInt]) {
-                            this.seen[number - this.minInt] = true;
+                        if (!this.hasAppeared[number - this.minimumInteger]) {
+                            this.hasAppeared[number - this.minimumInteger] = true;
                             uniqueNumbers.push(number);
                         }
                     } else {
@@ -55,45 +55,45 @@ class UniqueInt {
         }
 
         // Implementing Bubble Sort for simplicity
-        const n = numbers.length;
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j < n - i - 1; j++) {
-                if (numbers[j] > numbers[j + 1]) {
-                    [numbers[j], numbers[j + 1]] = [numbers[j + 1], numbers[j]];
+        const count = numbers.length;
+        for (let firstIndex = 0; firstIndex < count; firstIndex++) {
+            for (let secondIndex = 0; secondIndex < count - firstIndex - 1; secondIndex++) {
+                if (numbers[secondIndex] > numbers[secondIndex + 1]) {
+                    [numbers[secondIndex], numbers[secondIndex + 1]] = [numbers[secondIndex + 1], numbers[secondIndex]];
                 }
             }
         }
         return numbers;
     }
 
-    writeUniqueIntegers(uniqueNumbers, outputFilePath) {
+    writeUniqueNumbers(uniqueNumbers, outputFilePath) {
         const data = uniqueNumbers.join('\n') + '\n';
-        fs.writeFileSync(outputFilePath, data, 'utf-8');
+        fileSystem.writeFileSync(outputFilePath, data, 'utf-8');
     }
 }
 
 const inputFolder = './Inputs';
 const outputFolder = './Output';
 
-const uniqueIntProcessor = new UniqueInt();
+const processor = new UniqueIntProcessor();
 
-fs.readdir(inputFolder, (err, files) => {
-    if (err) {
-        console.error(`Error reading input folder: ${err}`);
+fileSystem.readdir(inputFolder, (error, files) => {
+    if (error) {
+        console.error(`Error reading input folder: ${error}`);
         return;
     }
 
-    files.forEach(file => {
-        if (file.endsWith('.txt')) {
-            const inputPath = path.join(inputFolder, file);
-            const outputPath = path.join(outputFolder, `${file}_results.txt`);
+    files.forEach(fileName => {
+        if (fileName.endsWith('.txt')) {
+            const inputPath = path.join(inputFolder, fileName);
+            const outputPath = path.join(outputFolder, `${fileName}_results.txt`);
 
             // Timing for each file
             const startTime = Date.now();
-            uniqueIntProcessor.processFile(inputPath, outputPath);
+            processor.processFile(inputPath, outputPath);
             const endTime = Date.now();
 
-            console.log(`Processed ${file} in ${(endTime - startTime) / 1000} seconds`);
+            console.log(`Processed ${fileName} in ${(endTime - startTime) / 1000} seconds`);
         }
     });
 });
